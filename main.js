@@ -586,13 +586,24 @@ function animate() {
   camera.position.z += (cameraTargetZ - camera.position.z) * 0.08;
   camera.lookAt(camera.position.x * 0.1, camera.position.y * 0.1, camera.position.z - 5);
 
-  // Slow star field rotation
-  starGroup.rotation.y += 0.00005;
+  // Slow star field rotation (+ hyperdrive boost)
+  const _hyper = !!window._hyperdriveActive;
+  starGroup.rotation.y += _hyper ? 0.004 : 0.00005;
 
   // Counter-rotate stars vs mouse (parallax depth layer)
   if (!isMobile) {
     starGroup.rotation.x = -currentMouseY * 0.03;
     starGroup.rotation.z = -currentMouseX * 0.03;
+  }
+
+  // Hyperdrive FX: rainbow borders + camera shake
+  if (_hyper) {
+    const hue = (time * 100) % 360;
+    cards.forEach(c => { c.border.material.color.setHSL(hue / 360, 1, 0.6); });
+    camera.position.x += (Math.random() - 0.5) * 0.06;
+    camera.position.y += (Math.random() - 0.5) * 0.06;
+  } else {
+    cards.forEach(c => { c.border.material.color.set(PROJECTS[c.index].accent); });
   }
 
   // Card idle animation

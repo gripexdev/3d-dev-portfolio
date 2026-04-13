@@ -269,3 +269,44 @@ const IS_MOBILE = window.innerWidth < 768;
     });
   });
 })();
+
+/* ────────────────────────────────────────────────────────────────
+   F6 — Konami Code Easter Egg + Hyperdrive
+──────────────────────────────────────────────────────────────── */
+(function initKonami() {
+  const CODE = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+    'b','a'
+  ];
+  let pos = 0;
+  const overlay  = document.getElementById('easter-overlay');
+  const closeBtn = overlay ? overlay.querySelector('.easter-close') : null;
+  if (!overlay) return;
+
+  let hyperTimer = null;
+
+  function activate() {
+    overlay.classList.add('active');
+    window._hyperdriveActive = true;
+    clearTimeout(hyperTimer);
+    hyperTimer = setTimeout(deactivate, 6000);
+  }
+
+  function deactivate() {
+    overlay.classList.remove('active');
+    window._hyperdriveActive = false;
+    clearTimeout(hyperTimer);
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', deactivate);
+
+  window.addEventListener('keydown', e => {
+    if (e.key === CODE[pos]) {
+      pos++;
+      if (pos === CODE.length) { pos = 0; activate(); }
+    } else {
+      pos = (e.key === CODE[0]) ? 1 : 0;
+    }
+  });
+})();
