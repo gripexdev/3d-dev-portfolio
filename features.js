@@ -63,3 +63,79 @@ const IS_MOBILE = window.innerWidth < 768;
     }
   };
 })();
+
+/* ────────────────────────────────────────────────────────────────
+   F2 — Ambient Space Audio Toggle (Web Audio API)
+──────────────────────────────────────────────────────────────── */
+(function initAudio() {
+  const btn     = document.getElementById('audio-toggle');
+  const iconOn  = document.getElementById('icon-sound-on');
+  const iconOff = document.getElementById('icon-sound-off');
+  const tooltip = document.getElementById('audio-tooltip');
+
+  let ctx, masterGain, filter, playing = false;
+
+  if (!localStorage.getItem('audioTooltipSeen')) {
+    setTimeout(() => {
+      tooltip.classList.add('show');
+      setTimeout(() => {
+        tooltip.classList.remove('show');
+        localStorage.setItem('audioTooltipSeen', '1');
+      }, 3000);
+    }, 4000);
+  }
+
+  function buildAudio() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0, ctx.currentTime);
+    filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 400;
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    [{ freq: 55, detune: 0 }, { freq: 110, detune: 8 }, { freq: 220, detune: -5 }].forEach(({ freq, detune }) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.detune.value = detune;
+      gain.gain.setValueAtTime(0.33, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(filter);
+      osc.start();
+      (function breathe() {
+        const t = ctx.currentTime;
+        gain.gain.setValueAtTime(gain.gain.value, t);
+        gain.gain.linearRampToValueAtTime(0.5, t + 2);
+        gain.gain.linearRampToValueAtTime(0.2, t + 4);
+        setTimeout(breathe, 4000);
+      })();
+    });
+  }
+
+  btn.addEventListener('click', () => {
+    if (!playing) {
+      buildAudio();
+      ctx.resume();
+      masterGain.gain.cancelScheduledValues(ctx.currentTime);
+      masterGain.gain.setValueAtTime(0, ctx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 2);
+      playing = true;
+      btn.classList.add('active');
+      iconOn.style.display  = '';
+      iconOff.style.display = 'none';
+    } else {
+      masterGain.gain.cancelScheduledValues(ctx.currentTime);
+      masterGain.gain.setValueAtTime(masterGain.gain.value, ctx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 1);
+      setTimeout(() => ctx.suspend(), 1100);
+      playing = false;
+      btn.classList.remove('active');
+      iconOn.style.display  = 'none';
+      iconOff.style.display = '';
+    }
+  });
+})();

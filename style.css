@@ -591,3 +591,43 @@ body.has-custom-cursor { cursor: none; }
 @media (max-width: 767px) {
   #cursor-dot, #cursor-ring { display: none; }
 }
+
+/* ── F2: Audio Toggle ──────────────────────────────────────────── */
+#audio-toggle {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(5,5,20,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--muted);
+  cursor: pointer;
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  pointer-events: auto;
+}
+#audio-toggle:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+#audio-toggle.active { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px rgba(77,159,255,0.3); }
+#audio-toggle svg { width: 18px; height: 18px; }
+
+#audio-tooltip {
+  position: fixed;
+  bottom: 84px; right: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--muted);
+  z-index: 200;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s, transform 0.4s;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+}
+#audio-tooltip.show { opacity: 1; transform: translateY(0); }
