@@ -646,3 +646,31 @@ body.has-custom-cursor { cursor: none; }
 .skill-pct { font-size: 12px; font-weight: 600; width: 32px; flex-shrink: 0; text-align: right; }
 
 @media (max-width: 767px) { .skills-grid { grid-template-columns: 1fr; } .skill-name { width: 90px; } }
+
+/* ── F4: Contact Form ──────────────────────────────────────────── */
+#contact-form { width:100%; max-width:520px; display:flex; flex-direction:column; gap:16px; text-align:left; pointer-events:auto; }
+.form-group { display:flex; flex-direction:column; gap:4px; }
+#contact-form input, #contact-form select, #contact-form textarea {
+  background:#0d1117; border:1px solid rgba(255,255,255,0.1); border-radius:8px;
+  padding:12px 16px; color:#fff; font-family:var(--font-ui); font-size:14px;
+  outline:none; transition:border-color 0.2s,box-shadow 0.2s; width:100%; resize:vertical;
+}
+#contact-form select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; cursor:pointer; }
+#contact-form select option { background:#0d1117; }
+#contact-form input:focus, #contact-form select:focus, #contact-form textarea:focus { border-color:#4d9fff; box-shadow:0 0 0 3px rgba(77,159,255,0.15); }
+#contact-form input.error, #contact-form textarea.error { border-color:#f87171; }
+.form-error { font-size:12px; color:#f87171; min-height:16px; }
+.form-submit-btn { align-self:flex-start; min-width:160px; }
+.form-submit-btn.loading { pointer-events:none; opacity:0.7; }
+.form-submit-btn.success { background:#059669 !important; }
+@keyframes form-shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-6px)} 30%{transform:translateX(6px)} 45%{transform:translateX(-6px)} 60%{transform:translateX(6px)} 75%{transform:translateX(-4px)} 90%{transform:translateX(4px)} }
+#contact-form.shake { animation:form-shake 0.5s ease; }
+.btn-spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; }
+@keyframes spin { to { transform:rotate(360deg); } }
+#form-success { display:flex; flex-direction:column; align-items:center; gap:16px; padding:20px 0; }
+.success-msg { font-size:15px; color:#00e5a0; text-align:center; }
+.success-check { width:52px; height:52px; }
+.check-circle { stroke-dasharray:157; stroke-dashoffset:157; animation:draw-circle 0.6s ease forwards; }
+.check-mark   { stroke-dasharray:50;  stroke-dashoffset:50;  animation:draw-check  0.4s 0.5s ease forwards; }
+@keyframes draw-circle { to { stroke-dashoffset:0; } }
+@keyframes draw-check  { to { stroke-dashoffset:0; } }

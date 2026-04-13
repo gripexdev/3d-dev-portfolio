@@ -170,3 +170,58 @@ const IS_MOBILE = window.innerWidth < 768;
   }, { threshold: 0.3 });
   observer.observe(grid);
 })();
+
+/* ────────────────────────────────────────────────────────────────
+   F4 — Contact Form with Validation
+──────────────────────────────────────────────────────────────── */
+(function initContactForm() {
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+  const fName = document.getElementById('f-name');
+  const fEmail = document.getElementById('f-email');
+  const fMessage = document.getElementById('f-message');
+  const submitBtn = document.getElementById('form-submit-btn');
+  const success = document.getElementById('form-success');
+
+  function setError(el, id, msg) {
+    const e = document.getElementById(id);
+    if (e) e.textContent = msg;
+    msg ? el.classList.add('error') : el.classList.remove('error');
+    return !!msg;
+  }
+
+  function validate() {
+    let err = false;
+    if (!fName.value.trim() || fName.value.trim().length < 2) err = setError(fName, 'err-name', 'Name must be at least 2 characters.') || err;
+    else setError(fName, 'err-name', '');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fEmail.value.trim())) err = setError(fEmail, 'err-email', 'Please enter a valid email address.') || err;
+    else setError(fEmail, 'err-email', '');
+    if (!fMessage.value.trim() || fMessage.value.trim().length < 10) err = setError(fMessage, 'err-message', 'Message must be at least 10 characters.') || err;
+    else setError(fMessage, 'err-message', '');
+    return !err;
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!validate()) {
+      form.classList.remove('shake');
+      void form.offsetWidth;
+      form.classList.add('shake');
+      setTimeout(() => form.classList.remove('shake'), 600);
+      return;
+    }
+    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+    submitBtn.classList.add('loading');
+    console.log('Form submission:', { name: fName.value, email: fEmail.value, type: document.getElementById('f-type').value, message: fMessage.value });
+    setTimeout(() => {
+      Array.from(form.querySelectorAll('.form-group')).forEach(g => { g.style.opacity = '0'; g.style.transition = 'opacity 0.3s'; });
+      submitBtn.innerHTML = '✓ Sent!';
+      submitBtn.classList.replace('loading', 'success');
+      setTimeout(() => {
+        Array.from(form.querySelectorAll('.form-group')).forEach(g => { g.style.display = 'none'; });
+        submitBtn.style.display = 'none';
+        success.style.display = 'flex';
+      }, 400);
+    }, 1500);
+  });
+})();
