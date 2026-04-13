@@ -225,3 +225,47 @@ const IS_MOBILE = window.innerWidth < 768;
     }, 1500);
   });
 })();
+
+/* ────────────────────────────────────────────────────────────────
+   F5 — Tech Stack Filter
+──────────────────────────────────────────────────────────────── */
+(function initFilter() {
+  const bar      = document.getElementById('filter-bar');
+  const sentinel = document.getElementById('filter-sentinel');
+  const pills    = bar ? bar.querySelectorAll('.filter-pill') : [];
+  if (!bar || !sentinel) return;
+
+  const CARD_TAGS = [
+    ['React','Node.js','Stripe','MongoDB'],
+    ['Next.js','OpenAI','WebSocket','Tailwind'],
+    ['Three.js','GSAP','WebGL','Vanilla JS'],
+    ['Vue','D3.js','REST API','PostgreSQL'],
+    ['React Native','Firebase','Plaid API'],
+    ['Next.js','Prisma','Stripe','Google Cal'],
+  ];
+
+  new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) bar.classList.add('visible');
+    else bar.classList.remove('visible');
+  }, { threshold: 0 }).observe(sentinel);
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const filter = pill.dataset.filter;
+      (window._cardGroups || []).forEach((group, i) => {
+        const visible = filter === 'All' || (CARD_TAGS[i] || []).some(t => t.toLowerCase().includes(filter.toLowerCase()));
+        const panel   = document.getElementById('panel-' + i);
+        if (visible) {
+          gsap.to(group.scale, { x: 1, y: 1, z: 1, duration: 0.4 });
+          group.visible = true;
+          if (panel) panel.style.opacity = '';
+        } else {
+          gsap.to(group.scale, { x: 0, y: 0, z: 0, duration: 0.4, onComplete() { group.visible = false; } });
+          if (panel) panel.style.opacity = '0.3';
+        }
+      });
+    });
+  });
+})();

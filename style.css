@@ -674,3 +674,19 @@ body.has-custom-cursor { cursor: none; }
 .check-mark   { stroke-dasharray:50;  stroke-dashoffset:50;  animation:draw-check  0.4s 0.5s ease forwards; }
 @keyframes draw-circle { to { stroke-dashoffset:0; } }
 @keyframes draw-check  { to { stroke-dashoffset:0; } }
+
+/* ── F5: Filter Bar ────────────────────────────────────────────── */
+#filter-bar {
+  position:sticky; top:var(--nav-h); z-index:90;
+  display:flex; gap:8px; padding:12px 40px;
+  background:rgba(5,5,20,0.7); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none;
+  transform:translateY(-40px); opacity:0; transition:transform 0.4s ease,opacity 0.4s ease;
+  pointer-events:auto;
+}
+#filter-bar::-webkit-scrollbar { display:none; }
+#filter-bar.visible { transform:translateY(0); opacity:1; }
+.filter-pill { flex-shrink:0; padding:6px 16px; border-radius:99px; border:1px solid rgba(255,255,255,0.2); background:transparent; color:var(--muted); font-size:13px; font-weight:500; cursor:pointer; transition:background 0.2s,color 0.2s,border-color 0.2s; white-space:nowrap; }
+.filter-pill:hover { color:#fff; border-color:rgba(255,255,255,0.4); }
+.filter-pill.active { background:#4d9fff; color:#fff; border-color:#4d9fff; }
+@media (max-width:767px) { #filter-bar { padding:12px 16px; } }
