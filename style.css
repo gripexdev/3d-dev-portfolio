@@ -557,3 +557,37 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* ── F1: Custom Cursor ─────────────────────────────────────────── */
+body.has-custom-cursor { cursor: none; }
+
+#cursor-dot, #cursor-ring {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s;
+}
+
+#cursor-dot {
+  width: 8px; height: 8px;
+  background: #fff;
+  top: 0; left: 0;
+  transition: transform 0.1s ease, opacity 0.2s, background 0.3s;
+}
+
+#cursor-ring {
+  width: 32px; height: 32px;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  top: 0; left: 0;
+  transition: transform 0.3s ease, border-color 0.3s, opacity 0.2s;
+  will-change: left, top;
+}
+
+#cursor-dot.hidden  { transform: translate(-50%,-50%) scale(0); }
+#cursor-ring.expand { transform: translate(-50%,-50%) scale(2.5); }
+
+@media (max-width: 767px) {
+  #cursor-dot, #cursor-ring { display: none; }
+}

@@ -434,6 +434,8 @@ function hidePanel(i) {
 const raycaster   = new THREE.Raycaster();
 let   hoveredCard = -1;
 let   frame       = 0;
+// Expose for features.js
+Object.defineProperty(window, 'hoveredCard', { get: () => hoveredCard });
 
 function checkHover() {
   raycaster.setFromCamera(mouse2D, camera);
