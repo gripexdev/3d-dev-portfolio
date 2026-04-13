@@ -139,3 +139,34 @@ const IS_MOBILE = window.innerWidth < 768;
     }
   });
 })();
+
+/* ────────────────────────────────────────────────────────────────
+   F3 — Animated Skill Progress Bars
+──────────────────────────────────────────────────────────────── */
+(function initSkillBars() {
+  const grid = document.getElementById('skills-grid');
+  if (!grid) return;
+  let triggered = false;
+  const observer = new IntersectionObserver(entries => {
+    if (triggered || !entries[0].isIntersecting) return;
+    triggered = true;
+    observer.disconnect();
+    grid.querySelectorAll('.skill-row').forEach((row, i) => {
+      const pct = parseInt(row.dataset.pct, 10);
+      const bar = row.querySelector('.skill-bar');
+      const label = row.querySelector('.skill-pct');
+      bar.style.background = row.dataset.gradient;
+      setTimeout(() => {
+        bar.style.width = pct + '%';
+        const start = performance.now();
+        (function count(now) {
+          const val = Math.min(Math.round(((now - start) / 1200) * pct), pct);
+          label.textContent = val + '%';
+          label.style.color = row.dataset.gradient.match(/#[0-9a-f]{6}/i)?.[0] || '#4d9fff';
+          if (val < pct) requestAnimationFrame(count);
+        })(performance.now());
+      }, i * 80);
+    });
+  }, { threshold: 0.3 });
+  observer.observe(grid);
+})();
